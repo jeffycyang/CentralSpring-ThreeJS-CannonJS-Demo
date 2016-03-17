@@ -1,6 +1,6 @@
 # Central Spring Force in Three.js with Cannon.js Demo
 
-- A demo using prestep callback add a spring force to a collection of bodies around a central point
+- A demo using prestep callback to add a spring force to a collection of bodies around a central point
 
 ## Credit
 
