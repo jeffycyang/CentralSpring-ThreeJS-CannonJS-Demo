@@ -41,11 +41,11 @@
           var ballshape;
           var ballbody;
           var balls = [];
-          for(var i = 0;i < 4;i++){
+          for(var i = 0;i < 100;i++){
             m = Math.random()*2;
             ballshape = new CANNON.Sphere(m);
             ballbody = new CANNON.Body({
-              mass: m,
+              mass: Math.pow(m,3),
               position: new CANNON.Vec3(Math.random()*5*(Math.pow(-1,Math.floor(Math.random()))),Math.random()*5*(Math.pow(-1,Math.floor(Math.random()))),0)
             });
             ballbody.addShape(ballshape);
@@ -67,12 +67,15 @@
               btoc.normalize();
               // this is the spring force, negative sign is dropped because it is accounted for by "position.negate" above
               // btoc.mult(5*d,this.force);
-              btoc.mult(15/(4*this.mass)*d,this.force);
+              // btoc.mult(200/(4*this.mass)*d,this.force);
+              btoc.mult(50*this.mass*d,this.force); // really good for petri
             }
           }
         });
 
       demo.start();
+
+      setTimeout(function(){demo.settings.paused=true;},2000);
 
     </script>
   </body>
