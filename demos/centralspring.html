@@ -35,7 +35,7 @@
           centralShape.collisionResponse = false;
           centralBody.addShape(centralShape);
           world.addBody(centralBody);
-          demo.addVisual(centralBody);
+          // demo.addVisual(centralBody);
 
           var m;
           var ballshape;
@@ -66,7 +66,8 @@
               d=btoc.norm();
               btoc.normalize();
               // this is the spring force, negative sign is dropped because it is accounted for by "position.negate" above
-              btoc.mult(5*d,this.force);
+              // btoc.mult(5*d,this.force);
+              btoc.mult(5/(4*this.mass)*d,this.force);
             }
           }
         });
