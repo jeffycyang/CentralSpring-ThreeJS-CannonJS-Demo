@@ -24,14 +24,14 @@
 
       var demo = new CANNON.Demo();
 
-      demo.addScene("Moon",function(){
+      demo.addScene("Central_Spring",function(){
           var world = demo.getWorld();
-          world.gravity.set(-10,-10,0);
+          world.gravity.set(0,0,0);
           world.broadphase = new CANNON.NaiveBroadphase();
 
           // static mid point for spring attachment
           var centralShape = new CANNON.Sphere(0.1),
-              centralBody = new CANNON.Body({ mass: 0 });
+              centralBody = new CANNON.Body({mass:0});
           centralShape.collisionResponse = false;
           centralBody.addShape(centralShape);
           world.addBody(centralBody);
@@ -40,34 +40,34 @@
           var m;
           var ballshape;
           var ballbody;
-          var balls=[];
-          for(var i=0;i<3;i++){
-            m=Math.random()*2;
-            ballshape=new CANNON.Sphere(m);
-            ballbody=new CANNON.Body({
-              mass:m,
-              position:new CANNON.Vec3(Math.random()*5*(Math.pow(-1,Math.floor(Math.random()))),Math.random()*5*(Math.pow(-1,Math.floor(Math.random()))),0)
+          var balls = [];
+          for(var i = 0;i < 4;i++){
+            m = Math.random()*2;
+            ballshape = new CANNON.Sphere(m);
+            ballbody = new CANNON.Body({
+              mass: m,
+              position: new CANNON.Vec3(Math.random()*5*(Math.pow(-1,Math.floor(Math.random()))),Math.random()*5*(Math.pow(-1,Math.floor(Math.random()))),0)
             });
             ballbody.addShape(ballshape);
             balls.push(ballbody);
           }
 
-          for(var i=0;i<balls.length;i++){
+          for(var i = 0;i < balls.length;i++){
             world.addBody(balls[i]);
             demo.addVisual(balls[i]);
           }
 
           var btoc;
           var d;
-          for(var i=0;i<balls.length;i++){
-            balls[i].preStep=function(){
-              btoc=new CANNON.Vec3();
+          for(var i = 0;i < balls.length;i++){
+            balls[i].preStep = function(){
+              btoc = new CANNON.Vec3();
               this.position.negate(btoc);
-              d=btoc.norm();
+              d = btoc.norm();
               btoc.normalize();
               // this is the spring force, negative sign is dropped because it is accounted for by "position.negate" above
               // btoc.mult(5*d,this.force);
-              btoc.mult(5/(4*this.mass)*d,this.force);
+              btoc.mult(15/(4*this.mass)*d,this.force);
             }
           }
         });
