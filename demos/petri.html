@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>cannon.js - callbacks demo</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  </head>
+  <body>
+    <script src="../build/cannon.js"></script>
+    <script src="../build/cannon.demo.js"></script>
+    <script src="../libs/dat.gui.js"></script>
+    <script src="../libs/Three.js"></script>
+    <script src="../libs/TrackballControls.js"></script>
+    <script src="../libs/Detector.js"></script>
+    <script src="../libs/Stats.js"></script>
+    <script src="../libs/smoothie.js"></script>
+    <script>
+
+      /**
+       * A demo showing how to use the preStep callback to add a force to a body.
+       * This will act like a force field.
+       */
+
+      var demo = new CANNON.Demo();
+
+      demo.addScene("Central_Spring",function(){
+          var world = demo.getWorld();
+          world.gravity.set(0,0,0);
+          world.broadphase = new CANNON.NaiveBroadphase();
+
+
+
+          // static mid point for spring attachment
+          var centralShape = new CANNON.Sphere(0.1),
+              centralBody = new CANNON.Body({mass:0});
+          centralShape.collisionResponse = false;
+          centralBody.addShape(centralShape);
+          world.addBody(centralBody);
+          // demo.addVisual(centralBody);
+
+          var m;
+          var ballshape;
+          var ballbody;
+          var balls = [];
+          for(var i = 0;i < 3;i++){
+            m = Math.random()*50;
+            while(m < 20){
+              m = Math.random()*50;
+            }
+            ballshape = new CANNON.Sphere(m);
+            ballbody = new CANNON.Body({
+              mass: Math.pow(m,3),
+              position: new CANNON.Vec3(Math.random()*35*(Math.pow(-1,Math.floor(Math.random()))),Math.random()*35*(Math.pow(-1,Math.floor(Math.random()))),0)
+            });
+            ballbody.addShape(ballshape);
+            balls.push(ballbody);
+          }
+
+          for(var i = 0;i < 20;i++){
+            m = Math.random()*3;
+            while(m < 1){
+              m = Math.random()*3;
+            }
+            ballshape = new CANNON.Sphere(m);
+            ballbody = new CANNON.Body({
+              mass: Math.pow(m,3),
+              position: new CANNON.Vec3(Math.random()*35*(Math.pow(-1,Math.floor(Math.random()))),Math.random()*35*(Math.pow(-1,Math.floor(Math.random()))),0)
+            });
+            ballbody.addShape(ballshape);
+            balls.push(ballbody);
+          }
+
+          for(var i = 0;i < 50;i++){
+            m = Math.random();
+            ballshape = new CANNON.Sphere(m);
+            ballbody = new CANNON.Body({
+              mass: Math.pow(m,3),
+              position: new CANNON.Vec3(Math.random()*35*(Math.pow(-1,Math.floor(Math.random()))),Math.random()*35*(Math.pow(-1,Math.floor(Math.random()))),0)
+            });
+            ballbody.addShape(ballshape);
+            balls.push(ballbody);
+          }
+
+          for(var i = 0;i < balls.length;i++){
+            world.addBody(balls[i]);
+            demo.addVisual(balls[i]);
+          }
+
+          var btoc;
+          var d;
+          for(var i = 0;i < balls.length;i++){
+            balls[i].preStep = function(){
+              btoc = new CANNON.Vec3();
+              this.position.negate(btoc);
+              d = btoc.norm();
+              btoc.normalize();
+              // this is the spring force, negative sign is dropped because it is accounted for by "position.negate" above
+              // btoc.mult(5*d,this.force);
+              // btoc.mult(200/(4*this.mass)*d,this.force);
+              btoc.mult(50*this.mass*d,this.force); // really good for petri
+            }
+          }
+        });
+
+      demo.start();
+
+      // setTimeout(function(){demo.settings.paused=true;},2000);
+
+    </script>
+  </body>
+</html>
