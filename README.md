@@ -5,4 +5,4 @@
 ## Credit
 
 - Created by Jeffery Y. C. Yang 2016
-- Inspired and adjusted from Schteppe's Cannon.js [demos](http://schteppe.github.io/cannon.js/)
+- Based off Schteppe's Cannon.js [demos](http://schteppe.github.io/cannon.js/)
